@@ -63,14 +63,31 @@ def summarize_ai():
     return jsonify({"summary": summary_text})
 
 
-# # summrize_ai(abc)
-#   generate 5 question based on pdf in the format of 
-#      Question:
-#     option 1
-#     option2
-#     option3
-#     option4
-#     answer:
+@app.route("/question",methods=['GET','POST'])
+def question():
+    data = request.get_json()  # ✅ Extracting JSON data
+    full_text = data.get("text", "")
+    client = genai.Client(api_key=GOOGLE_GEMINI_API)
+    response = client.models.generate_content(
+    model="gemini-2.0-flash", contents=f"""
+    Read all the pages of :{full_text} and 
+    generate 15 question based on pdf in the format of 
+     Question:
+    option 1
+    option2
+    option3
+    option4
+    answer:
+    
+    
+    """
+    )
+    question = response.candidates[0].content.parts[0].text if response.candidates else "No response"
+
+    return jsonify({"question": question})
+    
+
+  
 
 # pdf_text = summarize() 
 # summarize_ai(pdf_text)
