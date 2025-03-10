@@ -1,15 +1,16 @@
 import './App.css';
+import ReadFile from './Body/ReadFile';
 import Navbar from './Navbar/navbar';
 
 function App() {
   return (
-    <div style={{ paddingTop: "80px" }}> {/* Add padding to avoid content being hidden behind the fixed navbar */}
+    <div style={{ paddingTop: "80px" }}>
       <Navbar />
+      <ReadFile />
 
-      {/* Add other content here */}
       <div>
-        <h1>Vite + React</h1>
-        <p>This is a simple app with a fixed navbar.</p>
+        <h1>Test</h1>
+        <p>This is frontend Home</p>
       </div>
     </div>
   );
