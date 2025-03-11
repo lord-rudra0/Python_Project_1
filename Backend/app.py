@@ -61,7 +61,10 @@ def summarize_ai():
     client = genai.Client(api_key=GOOGLE_GEMINI_API)
     response = client.models.generate_content(
     model="gemini-2.0-flash", contents=f"""
-    Read all the pages of :{full_text} and Summrize the content of: {full_text}
+    Read all the pages of :{full_text} and Summrize the content of: {full_text} in differernt different Chapter in format of 
+    Chapter :1
+    Chapter Name:
+    Summery:
   
     
     

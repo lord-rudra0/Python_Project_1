@@ -6,12 +6,15 @@ import { useState } from "react";
 function ReadFile() {
     const [file, setFile] = useState(null);
     const [text, setText] = useState("")
+    const [loading, setLoading] = useState(false);
+
 
     const handleFileChange = (e) => {
         setFile(e.target.files[0]);
     };
 
     const handleUpload = async () => {
+        setLoading(true);
         if (!file) return alert("Please select a file first");
 
         const formData = new FormData();
@@ -37,19 +40,33 @@ function ReadFile() {
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ text: extractedText.text })
             })
-            const data = await summaryRes.json();
+            const summaryData = await summaryRes.json();
             if (summaryRes.ok) {
-                setText(data.summary)
+                setText(summaryData.summary || "No summary available");
             }
             else {
                 console.error("Error uploading file");
             }
 
+            if (summaryRes.ok && summaryData.Summary) {
+                // ✅ Convert newlines to <br> for HTML rendering
+                const formattedText = summaryData.Summary.replaceAll("\n", "<br/>");
+                setText(formattedText);
+            } else {
+                console.error("Error fetching summary:", summaryData);
+            }
+
         }
+
+
 
         catch (err) {
             console.error(err)
         }
+        finally {
+            setLoading(false);
+        }
+
     };
 
 
@@ -63,8 +80,9 @@ function ReadFile() {
                 <button onClick={handleUpload}>Upload File</button>
             </div>
             <div>
-                {text}
+                {loading ? <p>Loading...</p> : <p dangerouslySetInnerHTML={{ __html: text }}></p>}
             </div>
+
         </div>
 
 
