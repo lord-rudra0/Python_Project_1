@@ -4,9 +4,12 @@ from dotenv import load_dotenv
 import os
 from pypdf import PdfReader
 from werkzeug.utils import secure_filename
+from flask_cors import CORS 
+
 
 load_dotenv()
 app=Flask(__name__)
+CORS(app, resources={r"/*": {"origins": "http://localhost:5173" }})
 
 GOOGLE_GEMINI_API=os.getenv('GOOGLE_API')
 # print(GOPGLE_GEMINI_API)
@@ -20,7 +23,8 @@ def Home():
 
 
 @app.route("/upload",methods=['GET', 'POST'])
-def upload():  
+def upload(): 
+    
     if 'file' not in request.files:  
         return "No file part", 400  
 
@@ -39,8 +43,13 @@ def upload():
         page_text = current_page.extract_text()  
         if page_text:  
             full_text += page_text + "\n\n"  
+    response = jsonify({"text": full_text})
+    response.headers.add("Access-Control-Allow-Origin", "http://localhost:5173")
+    return response, 200
 
-    return jsonify({"text": full_text})  # Returning extracted text  
+
+    # return jsonify({"text": full_text},200, {"Access-Control-Allow-Origin": "http://localhost:5173"})  
+    # return {"message": "File uploaded successfully!"} 
 
 
 
@@ -60,8 +69,10 @@ def summarize_ai():
     )
     summary_text = response.candidates[0].content.parts[0].text if response.candidates else "No response"
 
-    return jsonify({"summary": summary_text})
-
+    # return jsonify({"summary": summary_text})
+    response = jsonify({"Summary": summary_text})
+    response.headers.add("Access-Control-Allow-Origin", "http://localhost:5173")
+    return response, 200
 
 @app.route("/question",methods=['GET','POST'])
 def question():
@@ -93,5 +104,5 @@ def question():
 # summarize_ai(pdf_text)
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host="0.0.0.0", port=5000, debug=True)
 
