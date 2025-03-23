@@ -8,6 +8,9 @@ function ReadFile() {
     const [file, setFile] = useState(null);
     const [text, setText] = useState("")
     const [loading, setLoading] = useState(false);
+    const [questions, setQuestions] = useState(null);
+    const [questionsLoading, setQuestionsLoading] = useState(false);
+    const [showSummary, setShowSummary] = useState(true);
 
 
     const handleFileChange = (e) => {
@@ -68,7 +71,39 @@ function ReadFile() {
         }
     };
 
+    const handleGenerateQuestions = async () => {
+        if (!text) {
+            alert("Please generate a summary first");
+            return;
+        }
 
+        // Ask user if they want to hide the summary
+        const hideSummary = window.confirm("Would you like to hide the summary while viewing the questions?");
+        setShowSummary(!hideSummary);
+
+        setQuestionsLoading(true);
+        try {
+            const response = await fetch('http://localhost:5000/question', {
+                method: 'POST',
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ text: text }),
+                mode: "cors"
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.error || "Error generating questions");
+            }
+
+            const data = await response.json();
+            setQuestions(data.questions);
+        } catch (err) {
+            console.error(err);
+            alert("Failed to generate questions");
+        } finally {
+            setQuestionsLoading(false);
+        }
+    };
 
     return (
         <div className="chapter-container">
@@ -92,8 +127,36 @@ function ReadFile() {
                 <p className="loading-text">Generating summary... Please wait</p>
             ) : (
                 <div className="chapter-content">
-                    <h2 className="chapter-title">Summary</h2>
-                    <div dangerouslySetInnerHTML={{ __html: text }} />
+                    {showSummary && (
+                        <>
+                            <h2 className="chapter-title">Summary</h2>
+                            <div dangerouslySetInnerHTML={{ __html: text }} />
+                        </>
+                    )}
+                    
+                    {text && (
+                        <button 
+                            onClick={handleGenerateQuestions} 
+                            className="question-button"
+                            disabled={questionsLoading}
+                        >
+                            {questionsLoading ? 'Generating Questions...' : 'Generate Questions'}
+                        </button>
+                    )}
+
+                    {questions && (
+                        <div className="questions-section">
+                            <h3 className="questions-title">Generated Questions</h3>
+                            <pre className="questions-content">{questions}</pre>
+                            
+                            <button 
+                                onClick={() => setShowSummary(!showSummary)} 
+                                className="toggle-summary-button"
+                            >
+                                {showSummary ? 'Hide Summary' : 'Show Summary'}
+                            </button>
+                        </div>
+                    )}
                 </div>
             )}
         </div>

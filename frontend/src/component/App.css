@@ -42,28 +42,49 @@
 }
 
 :root {
-    --primary-color: #2563eb;
-    --secondary-color: #1e40af;
-    --background-color: #f8fafc;
-    --text-color: #1e293b;
-    --card-bg: #ffffff;
+    --primary-color: #14b8a6; /* Vibrant teal */
+    --secondary-color: #0d9488; /* Darker teal */
+    --background-color: #f0fdfa; /* Very light teal */
+    --text-color: #0f172a; /* Dark blue-gray */
+    --card-bg: #ffffff; /* White */
+    --accent-color: #a855f7; /* Purple for accents */
 }
 
 body {
     background-color: var(--background-color);
     color: var(--text-color);
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
 }
 
 .home-container {
+    flex: 1;
     max-width: 1400px;
     margin: 0 auto;
     padding: 2rem;
-    min-height: 100vh;
+    padding-top: 80px; /* Space for navbar */
+    padding-bottom: 80px; /* Space for footer */
 }
 
 .home-content {
     padding: 4rem 1rem;
     text-align: center;
+    animation: fadeIn 1s ease-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 .home-title {
@@ -72,6 +93,18 @@ body {
     color: var(--text-color);
     margin-bottom: 1.5rem;
     line-height: 1.2;
+    animation: slideIn 0.8s ease-out;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(-50px);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
 }
 
 .home-description {
@@ -80,6 +113,18 @@ body {
     max-width: 800px;
     margin: 0 auto 3rem;
     line-height: 1.6;
+    animation: fadeInUp 1s ease-out 0.3s both;
+}
+
+@keyframes fadeInUp {
+    from {
+        transform: translateY(20px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
 }
 
 .features-grid {

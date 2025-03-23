@@ -3,20 +3,22 @@ import { motion } from "framer-motion";
 import './Navbar.css';
 
 function Navbar() {
-    console.log("navbar");
-
     return (
-        <motion.div
+        <motion.nav
             className="navbar"
+            initial={{ y: -100 }}
+            animate={{ y: 0 }}
+            transition={{ type: "spring", stiffness: 100, damping: 15 }}
         >
-            <motion.div animate={{ opacity: 1 }} transition={{ duration: 1 }}>
-                <h1>ABC</h1>
+            <motion.div 
+                className="navbar-content"
+                initial={{ opacity: 0, x: -50 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.2, duration: 0.5 }}
+            >
+                <h1>PDF Summarizer</h1>
             </motion.div>
-
-            <motion.div animate={{ opacity: 1 }} transition={{ duration: 1 }}>
-                <h1>Hello</h1>
-            </motion.div>
-        </motion.div>
+        </motion.nav>
     );
 }
 
