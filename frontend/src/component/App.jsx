@@ -13,7 +13,7 @@ function App() {
       <div className="home-content">
         {!hasSummary && (
           <>
-            <h1 className="home-title">Smart PDF Summarizer</h1>
+            <h1 className="home-title">PDF Summarizer</h1>
             <p className="home-description">
               Transform your reading experience with AI-powered chapter-wise summaries.
               Upload your PDFs and get concise, organized insights in seconds.
