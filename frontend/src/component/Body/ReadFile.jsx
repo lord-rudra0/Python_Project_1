@@ -4,7 +4,7 @@ import { useState } from "react";
 import './ReadFile.css';
 
 
-function ReadFile() {
+function ReadFile({ onSummaryGenerated }) {
     const [file, setFile] = useState(null);
     const [text, setText] = useState("")
     const [loading, setLoading] = useState(false);
@@ -66,6 +66,7 @@ function ReadFile() {
             if (summaryData.Summary) {
                 const formattedText = summaryData.Summary.replaceAll("\n", "<br/>");
                 setText(formattedText);
+                onSummaryGenerated(); // Call the callback
             } else {
                 throw new Error("No summary available");
             }

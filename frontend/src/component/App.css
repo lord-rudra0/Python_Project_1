@@ -94,6 +94,7 @@ body {
     margin-bottom: 1.5rem;
     line-height: 1.2;
     animation: slideIn 0.8s ease-out;
+    transition: opacity 0.3s ease, transform 0.3s ease;
 }
 
 @keyframes slideIn {
@@ -114,6 +115,7 @@ body {
     margin: 0 auto 3rem;
     line-height: 1.6;
     animation: fadeInUp 1s ease-out 0.3s both;
+    transition: opacity 0.3s ease, transform 0.3s ease;
 }
 
 @keyframes fadeInUp {
@@ -125,6 +127,12 @@ body {
         transform: translateY(0);
         opacity: 1;
     }
+}
+
+.home-title.hidden, .home-description.hidden {
+    opacity: 0;
+    transform: translateY(-20px);
+    pointer-events: none;
 }
 
 .features-grid {
