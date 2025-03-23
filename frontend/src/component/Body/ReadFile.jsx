@@ -155,6 +155,26 @@ function ReadFile({ onSummaryGenerated }) {
 
     const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
+    const formatSummary = (summary) => {
+        if (!summary) return [];
+        
+        // First clean any remaining HTML tags
+        const cleanSummary = summary.replace(/<br\s*\/?>/gi, '\n');
+        
+        // Split summary into chapters
+        const chapters = cleanSummary.split(/Chapter\s*:\s*\d+/).filter(Boolean);
+        return chapters.map((chapter, index) => {
+            const [chapterName, ...summaryLines] = chapter.split('\n').filter(Boolean);
+            return {
+                chapterNumber: index + 1,
+                chapterName: chapterName.replace('Chapter Name:', '').trim(),
+                summary: summaryLines.join('\n').replace('Summary:', '').trim()
+            };
+        });
+    };
+
+    const formattedChapters = formatSummary(text);
+
     return (
         <div className="chapter-container">
             <div className="upload-section">
@@ -177,10 +197,28 @@ function ReadFile({ onSummaryGenerated }) {
                 <p className="loading-text">Generating summary... Please wait</p>
             ) : (
                 <div className="chapter-content">
-                    {showSummary && (
+                    {showSummary && formattedChapters.length > 0 && (
                         <>
                             <h2 className="chapter-title">Summary</h2>
-                            <div dangerouslySetInnerHTML={{ __html: text }} />
+                            <div className="chapters-grid">
+                                {formattedChapters.map((chapter, index) => (
+                                    <div 
+                                        key={index} 
+                                        className="chapter-card"
+                                        style={{ animationDelay: `${index * 0.1}s` }}
+                                    >
+                                        <h3 className="chapter-number">
+                                            Chapter {chapter.chapterNumber}
+                                        </h3>
+                                        <h4 className="chapter-name">
+                                            {chapter.chapterName}
+                                        </h4>
+                                        <p className="chapter-summary">
+                                            {chapter.summary}
+                                        </p>
+                                    </div>
+                                ))}
+                            </div>
                         </>
                     )}
                     
@@ -290,7 +328,7 @@ function ReadFile({ onSummaryGenerated }) {
                                         {i + 1}
                                     </button>
                                 ))}
-                            </div>
+            </div>
 
                             <div className="results-card">
                                 <h4>Quiz Results</h4>

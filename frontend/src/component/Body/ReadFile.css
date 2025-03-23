@@ -494,6 +494,62 @@
     border-color: var(--primary-color);
 }
 
+.chapters-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    margin-top: 2rem;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.chapter-card {
+    background: var(--card-bg);
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e2e8f0;
+    animation: slideInUp 0.5s ease-out both;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.chapter-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px -1px rgba(0, 0, 0, 0.15);
+}
+
+.chapter-number {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--primary-color);
+    margin-bottom: 0.5rem;
+}
+
+.chapter-name {
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: var(--text-color);
+    margin-bottom: 1rem;
+}
+
+.chapter-summary {
+    font-size: 1rem;
+    color: var(--text-color);
+    line-height: 1.6;
+}
+
+@keyframes slideInUp {
+    from {
+        transform: translateY(20px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
 /* Responsive Styles */
 @media (max-width: 768px) {
     .home-container {
@@ -571,6 +627,26 @@
 
     .prompt-button {
         width: 100%;
+    }
+
+    .chapters-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .chapter-card {
+        padding: 1rem;
+    }
+    
+    .chapter-number {
+        font-size: 1.1rem;
+    }
+    
+    .chapter-name {
+        font-size: 1rem;
+    }
+    
+    .chapter-summary {
+        font-size: 0.9rem;
     }
 }
 

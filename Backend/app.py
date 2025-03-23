@@ -83,7 +83,7 @@ def upload():
 
 
     
-@app.route("/summary",methods=['POST'])   
+@app.route("/summary", methods=['POST'])
 def summarize_ai():
     try:
         data = request.get_json()
@@ -94,23 +94,33 @@ def summarize_ai():
         if not full_text:
             return jsonify({"error": "Empty text provided"}), 400
             
-        # Initialize the Generative AI client
         genai.configure(api_key=GOOGLE_GEMINI_API)
         model = genai.GenerativeModel("gemini-2.0-flash")
         
-        # Generate content
+        # Updated prompt with clear formatting instructions
         response = model.generate_content(
             f"""
-            Read all the pages of :{full_text} and Summarize the content of: {full_text} in different chapters in format of 
-            Chapter :1
-            Chapter Name:
-            Summary:
+            Read all the pages of: {full_text} and summarize the content in different chapters.
+            Format each chapter as follows:
+            
+            Chapter :[Number]
+            Chapter Name: [Name]
+            Summary: [Summary text]
+            
+            Rules:
+            1. Use plain text only, no HTML tags
+            2. Separate chapters with a single newline
+            3. Do not include any <br/> tags
+            4. Keep summaries concise but informative
             """
         )
         
         summary_text = response.text if response else "No response"
         
-        response = jsonify({"Summary": summary_text})
+        # Remove any remaining HTML tags just in case
+        clean_summary = summary_text.replace('<br/>', '\n').replace('<br>', '\n')
+        
+        response = jsonify({"Summary": clean_summary})
         response.headers.add("Access-Control-Allow-Origin", "http://localhost:5174")
         return response, 200
     except Exception as e:
