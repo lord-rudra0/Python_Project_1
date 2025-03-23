@@ -285,43 +285,87 @@
 
 .quiz-section {
     margin-top: 2rem;
-    padding: 2rem;
-    background-color: var(--card-bg);
-    border-radius: 12px;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 1200px;
 }
 
 .quiz-title {
-    font-size: 1.5rem;
+    font-size: 1.8rem;
     font-weight: 600;
     color: var(--text-color);
     margin-bottom: 1.5rem;
+    text-align: center;
 }
 
-.question-container {
-    margin-bottom: 1.5rem;
+.questions-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    margin-bottom: 2rem;
+}
+
+.question-card {
+    background-color: var(--card-bg);
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease;
+}
+
+.question-card:hover {
+    transform: translateY(-2px);
+}
+
+.question-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.2rem;
+}
+
+.question-number {
+    font-weight: 500;
+    color: var(--primary-color);
+}
+
+.question-status {
+    font-weight: 500;
+    padding: 0.3rem 0.6rem;
+    border-radius: 4px;
+    font-size: 0.9rem;
+}
+
+.question-status.correct {
+    background-color: #dcfce7;
+    color: #22c55e;
+}
+
+.question-status.incorrect {
+    background-color: #fee2e2;
+    color: #ef4444;
 }
 
 .question-text {
     font-size: 1.1rem;
-    font-weight: 500;
     color: var(--text-color);
-    margin-bottom: 1rem;
+    margin-bottom: 1.5rem;
+    line-height: 1.6;
 }
 
-.options-container {
+.options-grid {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 1rem;
+    grid-template-columns: 1fr;
+    gap: 0.8rem;
 }
 
 .option {
+    display: flex;
+    align-items: center;
     padding: 1rem;
     border: 2px solid #e2e8f0;
     border-radius: 8px;
     cursor: pointer;
     transition: all 0.3s ease;
-    text-align: center;
 }
 
 .option:hover {
@@ -338,17 +382,78 @@
     border-color: #ef4444;
 }
 
-.results-section {
-    margin-top: 2rem;
-    padding: 1rem;
-    background-color: #f8fafc;
-    border-radius: 8px;
+.option-letter {
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #e2e8f0;
+    border-radius: 50%;
+    margin-right: 1rem;
+    font-weight: 500;
 }
 
-.results-section p {
-    margin: 0.5rem 0;
-    font-size: 1rem;
+.option-text {
+    flex: 1;
+}
+
+.results-card {
+    background-color: var(--card-bg);
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-top: 2rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.results-card h4 {
+    font-size: 1.2rem;
+    font-weight: 600;
     color: var(--text-color);
+    margin-bottom: 1.5rem;
+    text-align: center;
+}
+
+.results-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+}
+
+.result-item {
+    padding: 1rem;
+    border-radius: 8px;
+    text-align: center;
+}
+
+.result-item span {
+    display: block;
+}
+
+.result-item span:first-child {
+    font-size: 0.9rem;
+    color: #64748b;
+    margin-bottom: 0.5rem;
+}
+
+.result-item span:last-child {
+    font-size: 1.2rem;
+    font-weight: 600;
+}
+
+.result-item.correct {
+    background-color: #dcfce7;
+    color: #22c55e;
+}
+
+.result-item.incorrect {
+    background-color: #fee2e2;
+    color: #ef4444;
+}
+
+.result-item.unanswered {
+    background-color: #e2e8f0;
+    color: #64748b;
 }
 
 .debug-section {
@@ -359,4 +464,32 @@
     font-family: monospace;
     font-size: 0.9rem;
     color: #666;
+}
+
+.pagination-controls {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+    margin: 2rem 0;
+}
+
+.pagination-button {
+    padding: 0.5rem 1rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 4px;
+    background-color: white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.pagination-button:hover {
+    background-color: var(--primary-color);
+    color: white;
+    border-color: var(--primary-color);
+}
+
+.pagination-button.active {
+    background-color: var(--primary-color);
+    color: white;
+    border-color: var(--primary-color);
 }

@@ -15,6 +15,8 @@ function ReadFile() {
     const [quizData, setQuizData] = useState([]);
     const [userAnswers, setUserAnswers] = useState({});
     const [showResults, setShowResults] = useState(false);
+    const [currentPage, setCurrentPage] = useState(1);
+    const questionsPerPage = 5;
 
 
     const handleFileChange = (e) => {
@@ -112,12 +114,10 @@ function ReadFile() {
             setQuizData(data.questions);
             setUserAnswers({});
             setShowResults(false);
+            setCurrentPage(1); // Reset to first page
         } catch (err) {
             console.error(err);
             alert(`Failed to generate questions: ${err.message}`);
-            if (err.message.includes("Failed to parse questions")) {
-                console.log("Server response:", err.response);
-            }
         } finally {
             setQuestionsLoading(false);
         }
@@ -146,6 +146,13 @@ function ReadFile() {
     };
 
     const { correct, incorrect } = calculateResults();
+
+    // Pagination logic
+    const indexOfLastQuestion = currentPage * questionsPerPage;
+    const indexOfFirstQuestion = indexOfLastQuestion - questionsPerPage;
+    const currentQuestions = quizData.slice(indexOfFirstQuestion, indexOfLastQuestion);
+
+    const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
     return (
         <div className="chapter-container">
@@ -225,32 +232,81 @@ function ReadFile() {
 
                     {quizData.length > 0 && (
                         <div className="quiz-section">
-                            <h3 className="quiz-title">Generated Questions</h3>
-                            {quizData.map((question, index) => (
-                                <div key={index} className="question-container">
-                                    <p className="question-text">{question.question}</p>
-                                    <div className="options-container">
-                                        {question.options.map((option, optionIndex) => (
-                                            <div
-                                                key={optionIndex}
-                                                className={`option ${
-                                                    userAnswers[index] === option
-                                                        ? (option === question.answer ? 'correct' : 'incorrect')
-                                                        : ''
-                                                }`}
-                                                onClick={() => handleAnswerSelect(index, option)}
-                                            >
-                                                {option}
+                            <h3 className="quiz-title">
+                                Quiz Questions ({quizData.length} total)
+                            </h3>
+                            
+                            {/* Questions Grid */}
+                            <div className="questions-grid">
+                                {currentQuestions.map((question, index) => {
+                                    const globalIndex = indexOfFirstQuestion + index;
+                                    return (
+                                        <div key={globalIndex} className="question-card">
+                                            <div className="question-header">
+                                                <span className="question-number">Question {globalIndex + 1}</span>
+                                                {userAnswers[globalIndex] && (
+                                                    <span className={`question-status ${
+                                                        userAnswers[globalIndex] === question.answer ? 'correct' : 'incorrect'
+                                                    }`}>
+                                                        {userAnswers[globalIndex] === question.answer ? '✓ Correct' : '✗ Incorrect'}
+                                                    </span>
+                                                )}
                                             </div>
-                                        ))}
+                                            <p className="question-text">{question.question}</p>
+                                            <div className="options-grid">
+                                                {question.options.map((option, optionIndex) => (
+                                                    <div
+                                                        key={optionIndex}
+                                                        className={`option ${
+                                                            userAnswers[globalIndex] === option
+                                                                ? (option === question.answer ? 'correct' : 'incorrect')
+                                                                : ''
+                                                        }`}
+                                                        onClick={() => handleAnswerSelect(globalIndex, option)}
+                                                    >
+                                                        <span className="option-letter">
+                                                            {String.fromCharCode(65 + optionIndex)}
+                                                        </span>
+                                                        <span className="option-text">{option}</span>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    );
+                                })}
+                            </div>
+
+                            {/* Pagination Controls */}
+                            <div className="pagination-controls">
+                                {Array.from({ length: Math.ceil(quizData.length / questionsPerPage) }, (_, i) => (
+                                    <button
+                                        key={i + 1}
+                                        onClick={() => paginate(i + 1)}
+                                        className={`pagination-button ${
+                                            currentPage === i + 1 ? 'active' : ''
+                                        }`}
+                                    >
+                                        {i + 1}
+                                    </button>
+                                ))}
+                            </div>
+
+                            <div className="results-card">
+                                <h4>Quiz Results</h4>
+                                <div className="results-grid">
+                                    <div className="result-item correct">
+                                        <span>Correct Answers</span>
+                                        <span>{correct}</span>
+                                    </div>
+                                    <div className="result-item incorrect">
+                                        <span>Incorrect Answers</span>
+                                        <span>{incorrect}</span>
+                                    </div>
+                                    <div className="result-item unanswered">
+                                        <span>Unanswered</span>
+                                        <span>{quizData.length - (correct + incorrect)}</span>
                                     </div>
                                 </div>
-                            ))}
-                            
-                            <div className="results-section">
-                                <p>Correct: {correct}</p>
-                                <p>Incorrect: {incorrect}</p>
-                                <p>Unanswered: {quizData.length - (correct + incorrect)}</p>
                             </div>
                         </div>
                     )}

@@ -130,9 +130,9 @@ def question():
         genai.configure(api_key=GOOGLE_GEMINI_API)
         model = genai.GenerativeModel("gemini-2.0-flash")
         
-        # More specific prompt to ensure JSON response
+        # Modified prompt to generate all relevant questions
         prompt = f"""
-        Read the following text and generate 5 multiple choice questions in JSON format:
+        Read the following text and generate multiple choice questions in JSON format:
         {full_text}
         
         Return a JSON array where each element is an object with:
@@ -140,20 +140,7 @@ def question():
         - options: array of 4 strings
         - answer: string (must be one of the options)
         
-        Example:
-        [
-            {{
-                "question": "What is the capital of France?",
-                "options": ["Paris", "London", "Berlin", "Madrid"],
-                "answer": "Paris"
-            }},
-            {{
-                "question": "What is 2 + 2?",
-                "options": ["3", "4", "5", "6"],
-                "answer": "4"
-            }}
-        ]
-        
+        Generate as many relevant questions as possible based on the content.
         Return only the JSON array, nothing else.
         """
         
@@ -161,8 +148,6 @@ def question():
         
         # Extract and clean the response
         response_text = response.candidates[0].content.parts[0].text if response.candidates else "[]"
-        
-        # Remove any markdown code block syntax
         response_text = response_text.replace("```json", "").replace("```", "").strip()
         
         try:
@@ -170,7 +155,10 @@ def question():
             if not isinstance(questions, list):
                 return jsonify({"error": "Invalid question format"}), 500
                 
-            return jsonify({"questions": questions}), 200
+            return jsonify({
+                "questions": questions,
+                "total_questions": len(questions)
+            }), 200
         except json.JSONDecodeError as e:
             return jsonify({
                 "error": "Failed to parse questions",
