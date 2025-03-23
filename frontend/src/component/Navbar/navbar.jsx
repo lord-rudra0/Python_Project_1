@@ -1,11 +1,26 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import './Navbar.css';
 
 function Navbar() {
+    const [scrolled, setScrolled] = useState(false);
+
+    useEffect(() => {
+        const handleScroll = () => {
+            if (window.scrollY > 50) {
+                setScrolled(true);
+            } else {
+                setScrolled(false);
+            }
+        };
+
+        window.addEventListener('scroll', handleScroll);
+        return () => window.removeEventListener('scroll', handleScroll);
+    }, []);
+
     return (
         <motion.nav
-            className="navbar"
+            className={`navbar ${scrolled ? 'scrolled' : ''}`}
             initial={{ y: -100 }}
             animate={{ y: 0 }}
             transition={{ type: "spring", stiffness: 100, damping: 15 }}

@@ -12,6 +12,13 @@
     justify-content: center;
     align-items: center;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+
+.navbar.scrolled {
+    padding: 0.8rem 2rem;
+    background-color: rgba(20, 184, 166, 0.95);
+    backdrop-filter: blur(10px);
 }
 
 .navbar-content {
@@ -19,6 +26,8 @@
     max-width: 1400px;
     display: flex;
     justify-content: center;
+    align-items: center;
+    transition: all 0.3s ease;
 }
 
 .navbar h1 {
@@ -26,4 +35,83 @@
     font-size: 1.5rem;
     font-weight: 600;
     text-align: center;
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+.navbar h1::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 2px;
+    background-color: white;
+    transition: width 0.3s ease;
+}
+
+.navbar h1:hover::after {
+    width: 100%;
+}
+
+/* Animation for navbar entry */
+@keyframes navbarSlideIn {
+    0% {
+        transform: translateY(-100%);
+        opacity: 0;
+    }
+    100% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* Animation for navbar title */
+@keyframes titleFadeIn {
+    0% {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.navbar {
+    animation: navbarSlideIn 0.8s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+}
+
+.navbar h1 {
+    animation: titleFadeIn 1s ease-out 0.3s both;
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+    .navbar {
+        padding: 0.8rem 1rem;
+    }
+    
+    .navbar h1 {
+        font-size: 1.3rem;
+    }
+    
+    .navbar.scrolled {
+        padding: 0.6rem 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .navbar {
+        padding: 0.6rem 1rem;
+    }
+    
+    .navbar h1 {
+        font-size: 1.1rem;
+    }
+    
+    .navbar.scrolled {
+        padding: 0.5rem 1rem;
+    }
 }
