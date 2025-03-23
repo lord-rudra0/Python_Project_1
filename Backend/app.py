@@ -6,6 +6,7 @@ from pypdf import PdfReader
 from werkzeug.utils import secure_filename
 from flask_cors import CORS 
 import logging
+import json
 
 
 load_dotenv()
@@ -118,42 +119,64 @@ def summarize_ai():
 @app.route("/question", methods=['POST'])
 def question():
     try:
-        logging.info("Received request for /question")
         data = request.get_json()
-        logging.info(f"Request data: {data}")
-        
         if not data or 'text' not in data:
-            logging.error("Missing text in request")
             return jsonify({"error": "Missing text in request"}), 400
             
         full_text = data.get("text", "")
         if not full_text:
-            logging.error("Empty text provided")
             return jsonify({"error": "Empty text provided"}), 400
             
-        logging.info("Initializing Generative AI client")
         genai.configure(api_key=GOOGLE_GEMINI_API)
         model = genai.GenerativeModel("gemini-2.0-flash")
         
-        logging.info("Generating content")
-        response = model.generate_content(
-            f"""
-            Read all the pages of :{full_text} and 
-            generate 15 questions based on pdf in the format of 
-            Question:
-            option 1
-            option 2
-            option 3
-            option 4
-            answer:
-            """
-        )
+        # More specific prompt to ensure JSON response
+        prompt = f"""
+        Read the following text and generate 5 multiple choice questions in JSON format:
+        {full_text}
         
-        questions = response.candidates[0].content.parts[0].text if response.candidates else "No response"
+        Return a JSON array where each element is an object with:
+        - question: string
+        - options: array of 4 strings
+        - answer: string (must be one of the options)
         
-        response = jsonify({"questions": questions})
-        response.headers.add("Access-Control-Allow-Origin", "http://localhost:5174")
-        return response, 200
+        Example:
+        [
+            {{
+                "question": "What is the capital of France?",
+                "options": ["Paris", "London", "Berlin", "Madrid"],
+                "answer": "Paris"
+            }},
+            {{
+                "question": "What is 2 + 2?",
+                "options": ["3", "4", "5", "6"],
+                "answer": "4"
+            }}
+        ]
+        
+        Return only the JSON array, nothing else.
+        """
+        
+        response = model.generate_content(prompt)
+        
+        # Extract and clean the response
+        response_text = response.candidates[0].content.parts[0].text if response.candidates else "[]"
+        
+        # Remove any markdown code block syntax
+        response_text = response_text.replace("```json", "").replace("```", "").strip()
+        
+        try:
+            questions = json.loads(response_text)
+            if not isinstance(questions, list):
+                return jsonify({"error": "Invalid question format"}), 500
+                
+            return jsonify({"questions": questions}), 200
+        except json.JSONDecodeError as e:
+            return jsonify({
+                "error": "Failed to parse questions",
+                "response": response_text
+            }), 500
+            
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
