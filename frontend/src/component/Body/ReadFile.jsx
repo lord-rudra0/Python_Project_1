@@ -312,18 +312,7 @@ function ReadFile({ onSummaryGenerated }) {
                         </div>
                     )}
 
-                    {/* Temporary debug section */}
-                    {process.env.NODE_ENV === 'development' && (
-                        <div className="debug-section">
-                            <h4>Debug Information</h4>
-                            <pre>{JSON.stringify({
-                                quizData,
-                                userAnswers,
-                                showResults,
-                                questionsLoading
-                            }, null, 2)}</pre>
-                        </div>
-                    )}
+                    
                 </div>
             )}
         </div>
