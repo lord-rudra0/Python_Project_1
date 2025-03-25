@@ -15,7 +15,7 @@ function Footer() {
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.3, duration: 0.5 }}
             >
-                © {new Date().getFullYear()} PDF Summarizer. All rights reserved.
+                © {new Date().getFullYear()} SummarIQ. All rights reserved.
             </motion.p>
         </motion.footer>
     );

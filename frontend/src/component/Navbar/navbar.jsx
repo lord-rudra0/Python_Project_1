@@ -25,13 +25,13 @@ function Navbar() {
             animate={{ y: 0 }}
             transition={{ type: "spring", stiffness: 100, damping: 15 }}
         >
-            <motion.div 
+            <motion.div
                 className="navbar-content"
                 initial={{ opacity: 0, x: -50 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: 0.2, duration: 0.5 }}
             >
-                <h1>PDF Summarizer</h1>
+                <h1>SummarIQ</h1>
             </motion.div>
         </motion.nav>
     );
