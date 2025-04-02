@@ -12,9 +12,9 @@ import json
 load_dotenv()
 app=Flask(__name__)
 CORS(app, resources={
-    r"/upload": {"origins": ["http://localhost:5174"]},
-    r"/summary": {"origins": ["http://localhost:5174"]},
-    r"/question": {"origins": ["http://localhost:5174"]}
+    r"/upload": {"origins": ["http://localhost:5173"]},
+    r"/summary": {"origins": ["http://localhost:5173"]},
+    r"/question": {"origins": ["http://localhost:5173"]}
 })
 # CORS(app)
 
@@ -39,21 +39,20 @@ def upload():
         return jsonify({"error": "No selected file"}), 400  
 
     try:
-        # Save uploaded file
+        
         f.save(f.filename)
         
-        # Try to read the PDF
         try:
             reader = PdfReader(f.filename)
         except Exception as e:
             return jsonify({"error": f"Failed to read PDF: {str(e)}"}), 400
 
-        # Check if PDF is encrypted
+       
         if reader.is_encrypted:
             try:
-                # Try to decrypt with empty password
+                
                 if reader.decrypt(""):
-                    # If decryption succeeds, proceed
+                    
                     pass
                 else:
                     return jsonify({"error": "PDF is encrypted and cannot be decrypted"}), 400
@@ -70,7 +69,7 @@ def upload():
                 full_text += page_text + "\n\n"  
         
         response = jsonify({"text": full_text})
-        response.headers.add("Access-Control-Allow-Origin", "http://localhost:5174")
+        response.headers.add("Access-Control-Allow-Origin", "http://localhost:5173")
         return response, 200
 
     except Exception as e:
@@ -121,7 +120,7 @@ def summarize_ai():
         clean_summary = summary_text.replace('<br/>', '\n').replace('<br>', '\n')
         
         response = jsonify({"Summary": clean_summary})
-        response.headers.add("Access-Control-Allow-Origin", "http://localhost:5174")
+        response.headers.add("Access-Control-Allow-Origin", "http://localhost:5173")
         return response, 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500
