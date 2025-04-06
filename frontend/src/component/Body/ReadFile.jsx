@@ -36,7 +36,7 @@ function ReadFile({ onSummaryGenerated }) {
 
         try {
             // First upload the file
-            const response = await fetch('http://localhost:5000/upload', {
+            const response = await fetch('https://summariq.onrender.com/upload', {
                 method: 'POST',
                 body: formData,
                 mode: "cors"
@@ -50,7 +50,7 @@ function ReadFile({ onSummaryGenerated }) {
             const extractedText = await response.json();
 
             // Then get the summary
-            const summaryRes = await fetch('http://localhost:5000/summary', {
+            const summaryRes = await fetch('https://summariq.onrender.com/summary', {
                 method: 'POST',
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ text: extractedText.text }),
@@ -94,7 +94,7 @@ function ReadFile({ onSummaryGenerated }) {
 
         setQuestionsLoading(true);
         try {
-            const response = await fetch('http://localhost:5000/question', {
+            const response = await fetch('https://summariq.onrender.com/question', {
                 method: 'POST',
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ text: text }),
