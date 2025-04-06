@@ -14,7 +14,7 @@ app=Flask(__name__)
 CORS(app, resources={
     r"/upload": {"origins": ["https://rudra-ps-summer-ai.vercel.app/"]},
     r"/summary": {"origins": ["https://rudra-ps-summer-ai.vercel.app/"]},
-    r"/question": {"origins": [""]}
+    r"/question": {"origins": ["https://rudra-ps-summer-ai.vercel.app"]}
 })
 # CORS(app)
 
