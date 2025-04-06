@@ -68,7 +68,7 @@ def upload():
                 full_text += page_text + "\n\n"  
         
         response = jsonify({"text": full_text})
-        response.headers.add("Access-Control-Allow-Origin", "https://rudra-ps-summer-ai.vercel.app/")
+        response.headers.add("Access-Control-Allow-Origin", "https://rudra-ps-summer-ai.vercel.app")
         return response, 200
 
     except Exception as e:
@@ -119,7 +119,7 @@ def summarize_ai():
         clean_summary = summary_text.replace('<br/>', '\n').replace('<br>', '\n')
         
         response = jsonify({"Summary": clean_summary})
-        response.headers.add("Access-Control-Allow-Origin", "https://rudra-ps-summer-ai.vercel.app/")
+        response.headers.add("Access-Control-Allow-Origin", "https://rudra-ps-summer-ai.vercel.app")
         return response, 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500
