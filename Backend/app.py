@@ -11,10 +11,11 @@ import json
 
 load_dotenv()
 app=Flask(__name__)
+CORS(app)
+
 CORS(app, resources={r"/*": {"origins": "https://rudra-ps-summer-ai.vercel.app"}})
 
 
-# CORS(app)
 
 GOOGLE_GEMINI_API=os.getenv('GOOGLE_API')
 # print(GOPGLE_GEMINI_API)
